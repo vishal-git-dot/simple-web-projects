@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Web Projects Hub</title>
+    <meta name="description" content="A 10-project frontend series (HTML/CSS/JS) with live demos, source code, and skill tags." />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="bg" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">⚡</div>
+        <div>
+          <h1>Simple Web Projects</h1>
+          <p>10 mini-projects • HTML/CSS/Vanilla JS • Live demos + source</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn ghost" href="https://github.com/vishal-git-dot" target="_blank" rel="noreferrer">
+          <span aria-hidden="true">↗</span> GitHub
+        </a>
+        <a class="btn" href="#projects">
+          <span aria-hidden="true">↓</span> View Projects
+        </a>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero card">
+        <div class="hero-left">
+          <h2>One hub. All demos. Zero friction.</h2>
+          <p>
+            This repo is a navigation page for my 10-project series. Each project is deployed on GitHub Pages
+            and kept dependency-free to highlight fundamentals: DOM, logic, storage, APIs, and UI polish.
+          </p>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-num" id="statCount">10</div>
+              <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">HTML/CSS/JS</div>
+              <div class="stat-label">Stack</div>
+            </div>
+            <div class="stat">
+              <div class="stat-num">Pages</div>
+              <div class="stat-label">Deploy</div>
+            </div>
+          </div>
+
+          <div class="hero-cta">
+            <a class="btn primary" href="#projects">Explore</a>
+            <button class="btn ghost" id="copyAllBtn" type="button">Copy all live links</button>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="preview card mini">
+            <div class="preview-top">
+              <span class="pill">Series Map</span>
+              <span class="pill muted" id="liveCountPill">Live: 8</span>
+            </div>
+            <ul class="preview-list" id="previewList" aria-label="Quick project list"></ul>
+          </div>
+
+          <div class="tips card mini">
+            <div class="tips-title">Quick tips</div>
+            <ul>
+              <li>Click <b>Live</b> to open a demo.</li>
+              <li>Click <b>Code</b> to view the repo.</li>
+              <li>Use search + filters to find projects fast.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="controls" id="projects" aria-label="Project controls">
+        <div class="control card">
+          <label for="search">Search</label>
+          <input id="search" type="search" placeholder="Search projects, skills, or features…" autocomplete="off" />
+        </div>
+
+        <div class="control card">
+          <label for="filter">Filter</label>
+          <select id="filter">
+            <option value="all">All</option>
+            <option value="done">Completed</option>
+            <option value="wip">Coming soon</option>
+            <option value="storage">localStorage</option>
+            <option value="api">Fetch/API</option>
+            <option value="logic">Logic/Conditionals</option>
+            <option value="ui">UI/Animation</option>
+          </select>
+        </div>
+
+        <div class="control card">
+          <label for="sort">Sort</label>
+          <select id="sort">
+            <option value="order">Series order</option>
+            <option value="name">Name</option>
+            <option value="status">Status</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="grid" id="grid" aria-label="Projects list"></section>
+
+      <section class="footer card">
+        <div class="foot-left">
+          <div class="foot-title">Want this series as a template?</div>
+          <p>
+            Fork the hub repo and swap in your own project links. Keep each project in its own repo for clean deployments.
+          </p>
+        </div>
+        <div class="foot-right">
+          <button class="btn ghost" id="themeBtn" type="button">Toggle theme</button>
+          <a class="btn" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to top</a>
+        </div>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+      // ======= CONFIG: set your username once ======= 
+      const USERNAME = "vishal-git-dot";
+
+      const projects = [
+        { n: 1,  name: "To-Do List App",        path: "To-Do List App" ,repo: "01-simple-web-projects-html-css-js",        skills: ["DOM","localStorage"],              features: ["Add/edit/delete","Persistence"],                      status: "done", tags: ["storage","ui"] },
+        { n: 2,  name: "Calculator",            path: "calculator" ,repo: "02-simple-web-projects-html-css-js",           skills: ["Logic","CSS Grid"],                features: ["Arithmetic","Keyboard-friendly"],                     status: "done", tags: ["logic","ui"] },
+        { n: 3,  name: "Weather App",           path: "Weather App" ,repo: "03-simple-web-projects-html-css-js",          skills: ["Fetch API"],                       features: ["City search","API handling"],                         status: "done", tags: ["api","ui"] },
+        { n: 4,  name: "Digital Clock",         path: "Digital Clock" ,repo: "04-simple-web-projects-html-css-js",        skills: ["Time API"],                        features: ["Live time","Format toggles"],                         status: "done", tags: ["ui"] },
+        { n: 5,  name: "Quiz App",              path: "QuizApp" ,repo: "05-simple-web-projects-html-css-js",             skills: ["Events","Logic"],                  features: ["MCQs","Score + feedback"],                            status: "done", tags: ["logic","ui"] },
+        { n: 6,  name: "SlideX Carousel",       path: "SlideX Carousel" ,repo: "06-simple-web-projects-html-css-js",      skills: ["CSS & JS"],                        features: ["Image slider","Controls + autoplay"],                 status: "done", tags: ["ui"] },
+        { n: 7,  name: "Portfolio Website",     path: "portfolio-website", repo: "07-simple-web-projects-html-css-js",    skills: ["Layout","Responsiveness"],         features: ["About/Projects/Contact","Smooth scroll"],             status: "done", tags: ["ui"] },
+        { n: 8,  name: "Typing Speed Test",     path: "typing-speed-test", repo: "08-simple-web-projects-html-css-js",    skills: ["Timers","String logic"],           features: ["WPM","Accuracy","Results UI"],                        status: "done", tags: ["logic","ui"] },
+        { n: 9,  name: "Notes App",             path: "" ,repo: "09-simple-web-projects-html-css-js",            skills: ["localStorage"],                    features: ["Add/delete notes","Persistence"],                     status: "done",  tags: ["storage","ui"] },
+        { n: 10, name: "Rock Paper Scissors",   path: "" ,repo: "10-simple-web-projects-html-css-js",  skills: ["Conditionals"],                    features: ["Play vs computer","Scoreboard"],                      status: "wip",  tags: ["logic","ui"] },
+      ];
+
+      const $ = (q) => document.querySelector(q);
+      const grid = $("#grid");
+      const search = $("#search");
+      const filter = $("#filter");
+      const sort = $("#sort");
+      const toast = $("#toast");
+
+      const liveUrl = (repo, path = "") => {
+      return path
+      ? `https://${USERNAME}.github.io/${repo}/${path}/`
+      : `https://${USERNAME}.github.io/${repo}/`;
+      };
+      const codeUrl = (repo) => `https://github.com/${USERNAME}/${repo}`;
+
+      function pill(text, kind="") {
+        return `<span class="pill ${kind}">${text}</span>`;
+      }
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add("show");
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(() => toast.classList.remove("show"), 1600);
+      }
+
+      function matches(p, q) {
+        if (!q) return true;
+        const hay = [
+          p.name,
+          p.repo,
+          ...p.skills,
+          ...p.features,
+          ...p.tags
+        ].join(" ").toLowerCase();
+        return hay.includes(q.toLowerCase());
+      }
+
+      function passesFilter(p, f) {
+        if (f === "all") return true;
+        if (f === "done") return p.status === "done";
+        if (f === "wip") return p.status === "wip";
+        return p.tags.includes(f);
+      }
+
+      function sortProjects(list, mode) {
+        const copy = [...list];
+        if (mode === "name") return copy.sort((a,b) => a.name.localeCompare(b.name));
+        if (mode === "status") return copy.sort((a,b) => a.status.localeCompare(b.status) || a.n - b.n);
+        return copy.sort((a,b) => a.n - b.n);
+      }
+
+      function card(p) {
+        const isDone = p.status === "done";
+        const statusPill = isDone ? pill("Live", "ok") : pill("Coming soon", "warn");
+        const liveBtn = isDone
+          ? `<a class="btn small primary" href="${liveUrl(p.repo,p.path)}" target="_blank" rel="noreferrer">Live ↗</a>`
+          : `<button class="btn small disabled" type="button" disabled>Live</button>`;
+
+        return `
+          <article class="proj card">
+            <div class="proj-top">
+              <div class="proj-title">
+                <div class="num">#${String(p.n).padStart(2,"0")}</div>
+                <h3>${p.name}</h3>
+              </div>
+              <div class="proj-status">${statusPill}</div>
+            </div>
+
+            <div class="meta">
+              <div class="row">
+                <div class="k">Skills</div>
+                <div class="v">${p.skills.map(s => pill(s)).join("")}</div>
+              </div>
+              <div class="row">
+                <div class="k">Features</div>
+                <div class="v">${p.features.map(f => pill(f, "muted")).join("")}</div>
+              </div>
+            </div>
+
+            <div class="proj-actions">
+              ${liveBtn}
+              <a class="btn small" href="${codeUrl(p.repo)}" target="_blank" rel="noreferrer">Code ↗</a>
+              <button class="btn small ghost" data-copy="${p.repo}" type="button">Copy link</button>
+            </div>
+
+            <div class="repo">${p.repo}</div>
+          </article>
+        `;
+      }
+
+      function render() {
+        const q = search.value.trim();
+        const f = filter.value;
+        const s = sort.value;
+
+        const filtered = projects
+          .filter(p => matches(p, q))
+          .filter(p => passesFilter(p, f));
+
+        const sorted = sortProjects(filtered, s);
+
+        grid.innerHTML = sorted.map(card).join("");
+
+        // wire up copy buttons
+        grid.querySelectorAll("[data-copy]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const repo = btn.getAttribute("data-copy");
+            const url = liveUrl(repo);
+            await navigator.clipboard.writeText(url);
+            showToast("Copied: " + url);
+          });
+        });
+
+        // hero pills
+        const liveCount = projects.filter(p => p.status === "done").length;
+        $("#liveCountPill").textContent = `Live: ${liveCount}`;
+        $("#statCount").textContent = String(projects.length);
+      }
+
+      // mini preview list in hero
+      function renderPreview() {
+        const ul = $("#previewList");
+        const items = projects.slice(0, 10).map(p => {
+          const dot = p.status === "done" ? "🟢" : "🟡";
+          return `<li>${dot} <span>${String(p.n).padStart(2,"0")}.</span> ${p.name}</li>`;
+        });
+        ul.innerHTML = items.join("");
+      }
+
+      // Copy all live links
+      $("#copyAllBtn").addEventListener("click", async () => {
+        const lines = projects
+          .filter(p => p.status === "done")
+          .map(p => `${String(p.n).padStart(2,"0")} ${p.name}: ${liveUrl(p.repo)}`);
+        await navigator.clipboard.writeText(lines.join("\n"));
+        showToast("Copied all live links");
+      });
+
+      // Theme toggle (dark/light via data-theme)
+      $("#themeBtn").addEventListener("click", () => {
+        const root = document.documentElement;
+        const now = root.getAttribute("data-theme") || "dark";
+        const next = now === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        localStorage.setItem("hub_theme", next);
+        showToast(`Theme: ${next}`);
+      });
+
+      function loadTheme() {
+        const saved = localStorage.getItem("hub_theme");
+        if (saved) document.documentElement.setAttribute("data-theme", saved);
+        else document.documentElement.setAttribute("data-theme", "dark");
+      }
+
+      // Inputs
+      [search, filter, sort].forEach(el => el.addEventListener("input", render));
+
+      // Init
+      loadTheme();
+      renderPreview();
+      render();
+    </script>
+  </body>
+</html>
